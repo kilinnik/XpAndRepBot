@@ -18,7 +18,7 @@ namespace XpAndRepBot
         {
             var idUser = update.Message.From.Id;
             var user = db.TableUsers.First(x => x.Id == idUser);
-            string result = $"Имя: {user.Name}\r\nLvl: {user.Lvl}({user.CurXp}/{Math.Genlvl(user.Lvl + 1)})\r\nМесто в рейтинге по уровню: {Math.PlaceLvl(user.Id, db.TableUsers)}";           
+            string result = $"Имя: {user.Name}\r\nLvl: {user.Lvl}({user.CurXp}/{Сalculation.Genlvl(user.Lvl + 1)})\r\nМесто в топе по уровню: {Сalculation.PlaceLvl(user.Id, db.TableUsers)}\r\nRep: {user.Rep}\r\nМесто в топе по репутации: {Сalculation.PlaceRep(user.Id, db.TableUsers)}";           
             return result;
         }
         public static string TopLvl(InfoContext db)
@@ -30,34 +30,26 @@ namespace XpAndRepBot
             foreach (var user in users)
             {
                 if (i == 51) break;
-                if(i == 50) result += $"{i}. {user.Name} lvl {user.Lvl}({user.CurXp}/{Math.Genlvl(user.Lvl + 1)})";
-                else result += $"{i}. {user.Name} lvl {user.Lvl}({user.CurXp}/{Math.Genlvl(user.Lvl + 1)})\r\n";
+                if(i == 50) result += $"{i}. {user.Name} lvl {user.Lvl}({user.CurXp}/{Сalculation.Genlvl(user.Lvl + 1)})";
+                else result += $"{i}. {user.Name} lvl {user.Lvl}({user.CurXp}/{Сalculation.Genlvl(user.Lvl + 1)})\r\n";
                 i++;
             }
             return result;
         }
-    }
-    public static class Math
-    {
-        public static int PlaceLvl(long idUser, DbSet<Users> TableUsers)
+        public static string TopRep(InfoContext db)
         {
-            var users = TableUsers
-            .OrderByDescending(b => b.Lvl).ThenByDescending(n => n.CurXp);
-            int result = 1;
+            var users = db.TableUsers
+            .OrderByDescending(b => b.Rep);
+            string result = "";
+            int i = 1;
             foreach (var user in users)
             {
-                if (idUser == user.Id) break;
-                result++;
+                if (i == 51) break;
+                if (i == 50) result += $"{i}. {user.Name} rep {user.Rep}";
+                else result += $"{i}. {user.Name} rep {user.Rep}\r\n";
+                i++;
             }
             return result;
-        }
-        public static int Genlvl(int x)
-        {
-            if (x == 0) return x;
-            else if (x == 1) return 100;
-            if (x % 2 == 0) x = 2 * Genlvl(x - 1) - Genlvl(x - 2) + 35;
-            else x = 2 * Genlvl(x - 1) - Genlvl(x - 2) + 35 + 100;
-            return x;
         }
     }
 }

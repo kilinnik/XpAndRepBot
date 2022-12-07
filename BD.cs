@@ -11,9 +11,10 @@ namespace XpAndRepBot
         public string Name { get; set; }
         public int Lvl { get; set; }
         public int CurXp { get; set; }
-        public Users (long id, string name, int lvl, int curXp)
+        public int Rep { get; set; }
+        public Users (long id, string name, int lvl, int curXp, int rep)
         {
-            Id = id; Name = name;  Lvl = lvl; CurXp = curXp;
+            Id = id; Name = name;  Lvl = lvl; CurXp = curXp; Rep = rep; 
         }
     }
     public class InfoContext : DbContext
